@@ -35,7 +35,7 @@ class _OverviewHomeState extends State<OverviewHome> {
                 width: 500.0,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 32.0,
+                    vertical: 5.0,
                     horizontal: 16.0,
                   ),
                   child: CupertinoSegmentedControl<int>(

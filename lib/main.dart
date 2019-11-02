@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:islington_navigation_flutter/controller/dynamic_theme.dart';
+import 'package:islington_navigation_flutter/controller/utils/backdrop.dart';
 import 'package:islington_navigation_flutter/controller/utils/check_authorization.dart';
 import 'package:islington_navigation_flutter/controller/utils/check_routine_authorization.dart';
 import 'package:islington_navigation_flutter/model/introscreen.dart';
@@ -49,7 +50,7 @@ class NavigationApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Virtual Navigation',
             theme: theme,
-            home: intro ? OnBoardingScreen() : MainPage(),
+            home: intro ? OnBoardingScreen() : BackDropPage(),
             routes: <String, WidgetBuilder>{
               '/mainpage': (BuildContext context) => MainPage(),
               '/overview': (BuildContext context) => OverviewHome(),

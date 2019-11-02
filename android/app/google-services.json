@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:271632604929:android:31de5fc25a288e59",
+        "android_client_info": {
+          "package_name": "com.example.college_finder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271632604929-servp5j1pusqgr9dq79mgurp9ltjf8iu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.college_finder",
+            "certificate_hash": "5d35e12792bf6748cdd40000d0d7f827aa8abebc"
+          }
+        },
+        {
+          "client_id": "271632604929-i1foiagug1qesmttj3ldqusjs61g6sjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7aGHQWeNc_8UpytAH9kuIA8Z4pMstBhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271632604929-i1foiagug1qesmttj3ldqusjs61g6sjr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:271632604929:android:e4b80eea41b7889e",
         "android_client_info": {
           "package_name": "com.example.islington_navigation_flutter"

@@ -5,8 +5,6 @@ import 'package:random_string/random_string.dart';
 import '../../model/app/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -33,13 +31,6 @@ class LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey =
       GlobalKey<FormFieldState<String>>();
-
-  static var assetImageGoogle = new AssetImage("assets/google_signin.png");
-  var googleImage =
-      new Image(image: assetImageGoogle, height: 50.0, width: 330.0);
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  GoogleSignIn _googleSignIn = GoogleSignIn();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
@@ -77,80 +68,6 @@ class LoginPageState extends State<LoginPage> {
     setState(() {
       person.userid = String.fromCharCodes(mergedCodeUnits);
     });
-  }
-
-  Future<FirebaseUser> _signInWithGoogle(BuildContext context) async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    print("after google auth");
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    print("after credentials");
-
-    FirebaseUser userDetails = await _auth.signInWithCredential(credential);
-
-    ProviderDetails providerInfo = new ProviderDetails(userDetails.providerId);
-    List<ProviderDetails> providerData = new List<ProviderDetails>();
-
-    UserDetails details = UserDetails(
-        userDetails.providerId,
-        userDetails.displayName,
-        userDetails.photoUrl,
-        userDetails.email,
-        providerData);
-
-    try {
-      Users user = new Users(email: userDetails.email);
-      try {
-        checkEmail(http.Client(), userDetails.email).then((users) async {
-          if (users != []) {
-            _storeUserId(users.first.user_id);
-            Navigator.of(context).pushReplacementNamed('/mainpage');
-          } else {
-            try {
-              Users newUser = new Users(
-                  user_id: person.userid,
-                  first_login: 0,
-                  admin: 0,
-                  name: userDetails.displayName,
-                  email: userDetails.email,
-                  user_name: userDetails.displayName,
-                  image: userDetails.photoUrl,
-                  provider: "Google");
-
-              createGoogleUser(http.Client(), newUser).then((returnCode) async {
-                if (returnCode == "200") {
-                  print("Google user registered successfully");
-                  _storeUserId(person.userid);
-                  Navigator.of(context).pushReplacementNamed('/mainpage');
-                } else if (returnCode == "500") {
-                  print("Google User failed to register");
-                  showInSnackBar("Please try again later");
-                }
-              }).catchError((onError) {
-                print("Could not create data because: " + onError.toString());
-              });
-            } on PlatformException {
-              print("Try again later");
-            }
-          }
-          // else if(returnCode ==)
-        }).catchError((onError) {
-          print("Could not create data because: " + onError.toString());
-        });
-      } on PlatformException {
-        print("Try again later");
-      }
-    } on PlatformException {
-      print("Try again later");
-    }
-
-    return userDetails;
   }
 
   void _handleSubmitted() {
@@ -191,15 +108,6 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final googleSignin = Padding(
-        padding: EdgeInsets.symmetric(vertical: 5.0),
-        child: MaterialButton(
-            child: googleImage,
-            onPressed: () {
-              _signInWithGoogle(context);
-              // _signinWithGoogle();
-            }));
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -213,88 +121,82 @@ class LoginPageState extends State<LoginPage> {
           autovalidate: _autovalidate,
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              elevation: 12.0,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    const SizedBox(height: 24.0),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        filled: true,
-                        icon: Icon(Icons.supervised_user_circle),
-                        hintText: 'Your username',
-                        labelText: 'Username',
-                      ),
-                      keyboardType: TextInputType.text,
-                      onSaved: (String value) {
-                        person.username = value;
-                      },
-                      validator: _validateUsername,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const SizedBox(height: 24.0),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      filled: true,
+                      icon: Icon(Icons.supervised_user_circle),
+                      hintText: 'Your username',
+                      labelText: 'Username',
                     ),
-                    const SizedBox(height: 24.0),
-                    TextFormField(
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        border: const UnderlineInputBorder(),
-                        filled: true,
-                        hintText: 'Your password',
-                        labelText: 'Password',
-                        icon: Icon(Icons.lock_outline),
-                        suffixIcon: GestureDetector(
-                          // dragStartBehavior: DragStartBehavior.down,
-                          onTap: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                          child: Icon(
-                            _obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            semanticLabel: _obscureText
-                                ? 'show password'
-                                : 'hide password',
-                          ),
+                    keyboardType: TextInputType.text,
+                    onSaved: (String value) {
+                      person.username = value;
+                    },
+                    validator: _validateUsername,
+                  ),
+                  const SizedBox(height: 24.0),
+                  TextFormField(
+                    obscureText: _obscureText,
+                    decoration: InputDecoration(
+                      border: const UnderlineInputBorder(),
+                      filled: true,
+                      hintText: 'Your password',
+                      labelText: 'Password',
+                      icon: Icon(Icons.lock_outline),
+                      suffixIcon: GestureDetector(
+                        // dragStartBehavior: DragStartBehavior.down,
+                        onTap: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          semanticLabel: _obscureText
+                              ? 'show password'
+                              : 'hide password',
                         ),
                       ),
-                      onSaved: (String value) {
-                        person.password = value;
-                      },
-                      validator: _validatePassword,
                     ),
-                    const SizedBox(height: 24.0),
-                    Center(
-                      child: RaisedButton(
-                        child: const Text('SUBMIT'),
-                        onPressed: _handleSubmitted,
-                      ),
+                    onSaved: (String value) {
+                      person.password = value;
+                    },
+                    validator: _validatePassword,
+                  ),
+                  const SizedBox(height: 24.0),
+                  Center(
+                    child: RaisedButton(
+                      child: const Text('SUBMIT'),
+                      onPressed: _handleSubmitted,
                     ),
-                    const SizedBox(height: 24.0),
-                    const SizedBox(height: 24.0),
-                    FlatButton(
-                      child: Text(
-                        "Not signed up yet?? Sign in here",
-                        style: TextStyle(color: Colors.redAccent),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (c) {
-                          return new RegisterPage();
-                        }));
-                      },
+                  ),
+                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
+                  FlatButton(
+                    child: Text(
+                      "Not signed up yet?? Sign in here",
+                      style: TextStyle(color: Colors.redAccent),
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    googleSignin
-                  ],
-                ),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (c) {
+                        return new RegisterPage();
+                      }));
+                    },
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                ],
               ),
             ),
           ),
@@ -302,20 +204,4 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
-
-class UserDetails {
-  final String providerDetails;
-  final String userName;
-  final String photoUrl;
-  final String userEmail;
-  final List<ProviderDetails> providerData;
-
-  UserDetails(this.providerDetails, this.userName, this.photoUrl,
-      this.userEmail, this.providerData);
-}
-
-class ProviderDetails {
-  ProviderDetails(this.providerDetails);
-  final String providerDetails;
 }
