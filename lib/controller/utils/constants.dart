@@ -1,4 +1,4 @@
-var db_host = "http://172.20.10.3:3000";
+var db_host = "http://192.168.0.9:3000";
 // var db_host = "http://192.168.0.6:3000";
 
 //to get images
