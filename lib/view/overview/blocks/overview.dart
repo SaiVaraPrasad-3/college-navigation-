@@ -126,52 +126,116 @@ class BlocksTileState extends State<BlocksTile> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.45,
-          width: double.infinity,
-          child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              elevation: 10.0,
-              child: Stack(alignment: Alignment(0.0, 1.0), children: <Widget>[
-                widget.block.image != null
-                    ? Image.network(
-                        GET_BLOCK_IMAGES + widget.block.image,
-                        // fit: BoxFit.fill,
-                      )
-                    : Image.asset("assets/default_avatar.png"),
-                Container(
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Stack(
+        children: <Widget>[
+          GestureDetector(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height * 0.35,
+                  minWidth: double.infinity,
+                  maxHeight: MediaQuery.of(context).size.height * 0.35),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 14.0, left: 14.0, right: 14.0),
+                child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Colors.black,
-                  ),
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      widget.block.block_name,
-                      style: TextStyle(
-                          fontSize: 21.0,
-                          fontWeight: FontWeight.w200,
-                          color: Colors.white),
+                      image: DecorationImage(
+                          image: NetworkImage(
+                            GET_BLOCK_IMAGES + widget.block.image,
+                            // fit: BoxFit.fill,
+                          ),
+                          fit: BoxFit.cover),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        new BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 6,
+                        ),
+                      ]),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0))),
+                    color: Colors.black54,
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
+                    child: Center(
+                      child: Text(
+                        widget.block.block_name,
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
                     ),
                   ),
                 ),
-              ])),
-        ),
+              ),
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return BlocksDetails(
+                    block_id: widget.block.block_id,
+                    block_name: widget.block.block_name,
+                    latitude: widget.block.latitude,
+                    longitude: widget.block.longitude,
+                    image: widget.block.image);
+              }));
+            },
+          ),
+        ],
       ),
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BlocksDetails(
-              block_id: widget.block.block_id,
-              block_name: widget.block.block_name,
-              latitude: widget.block.latitude,
-              longitude: widget.block.longitude,
-              image: widget.block.image);
-        }));
-      },
     );
   }
 }
+
+// GestureDetector(
+//       child: Padding(
+//         padding: const EdgeInsets.all(2.0),
+//         child: Container(
+//           height: MediaQuery.of(context).size.height * 0.45,
+//           width: double.infinity,
+//           child: Card(
+//               shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(30.0)),
+//               elevation: 10.0,
+//               child: Stack(alignment: Alignment(0.0, 1.0), children: <Widget>[
+//                 widget.block.image != null
+//                     ? Image.network(
+//                         GET_BLOCK_IMAGES + widget.block.image,
+//                         // fit: BoxFit.fill,
+//                       )
+//                     : Image.asset("assets/default_avatar.png"),
+//                 Container(
+//                   decoration: BoxDecoration(
+//                     color: Colors.black,
+//                   ),
+//                   width: double.infinity,
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(15.0),
+//                     child: Text(
+//                       widget.block.block_name,
+//                       style: TextStyle(
+//                           fontSize: 21.0,
+//                           fontWeight: FontWeight.w200,
+//                           color: Colors.white),
+//                     ),
+//                   ),
+//                 ),
+//               ])),
+//         ),
+//       ),
+//       onTap: () {
+//         Navigator.push(context, MaterialPageRoute(builder: (context) {
+//           return BlocksDetails(
+//               block_id: widget.block.block_id,
+//               block_name: widget.block.block_name,
+//               latitude: widget.block.latitude,
+//               longitude: widget.block.longitude,
+//               image: widget.block.image);
+//         }));
+//       },
+//     )
