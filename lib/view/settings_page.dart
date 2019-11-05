@@ -81,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("userid");
     print("User successfully logged out");
-    Navigator.of(context).pushReplacementNamed('/mainpage');
+    Navigator.of(context).pushReplacementNamed('/backdrop');
   }
 
   // widget to change the brightness
@@ -166,19 +166,19 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              changeBrightness(),
-              darkTheme
-                  ? SizedBox(
-                      height: 0.5,
-                    )
-                  : changeColor(),
-              changeIntroScreen(),
-              isLoggedIn ? logout() : SizedBox()
-            ],
-          ),
-        ));
+      child: Column(
+        children: <Widget>[
+          changeBrightness(),
+          darkTheme
+              ? SizedBox(
+                  height: 0.5,
+                )
+              : changeColor(),
+          changeIntroScreen(),
+          isLoggedIn ? logout() : SizedBox()
+        ],
+      ),
+    ));
   }
 }
 

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_backdrop/flutter_backdrop.dart';
+import 'package:islington_navigation_flutter/controller/utils/check_authorization.dart';
 import 'package:islington_navigation_flutter/controller/utils/check_routine_authorization.dart';
-import 'package:islington_navigation_flutter/view/credentials/login_home.dart';
-import 'package:islington_navigation_flutter/view/credentials/login_page.dart';
 import 'package:islington_navigation_flutter/view/map_screen.dart';
 import 'package:islington_navigation_flutter/view/overview/overview_home.dart';
 import 'package:islington_navigation_flutter/view/settings_page.dart';
@@ -12,6 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool _toggleFrontLayer = false;
 
 class BackDropPage extends StatefulWidget {
+  static String tag = "backdrop";
+  BackDropPage({this.pageName});
+  String pageName;
   @override
   _BackDropPageState createState() => _BackDropPageState();
 }
@@ -19,25 +21,61 @@ class BackDropPage extends StatefulWidget {
 /// Implementation of Backdrop Widget starts here.
 
 class _BackDropPageState extends State<BackDropPage> {
+  
+  @override
+  Future<bool> onWillPop() {
+    return showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              title: const Text('Close the application'),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('YES'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+                FlatButton(
+                  child: const Text('NO'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return ScopedModel(
-      model: FrontPanelModel(FrontPanels.homePanel),
-      child: ScopedModelDescendant<FrontPanelModel>(
-        builder: (context, _, model) => Backdrop(
-          appBarAnimatedLeadingMenuIcon: AnimatedIcons.close_menu,
-          appBarTitle: Text('Navigation'),
-          backLayer: BackPanel(),
-          toggleFrontLayer: _toggleFrontLayer,
-          frontLayer: model.activePanel,
-          // frontHeader: model.panelTitle(context),
-          frontHeaderHeight: 10.0,
-          titleVisibleOnPanelClosed: true,
-          shape: BeveledRectangleBorder(
-              borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-          )),
+    print(widget.pageName);
+    return WillPopScope(
+      onWillPop: onWillPop,
+          child: ScopedModel(
+        model: FrontPanelModel(widget.pageName == null
+            ? FrontPanels.homePanel
+            : FrontPanels.profilePanel),
+        child: ScopedModelDescendant<FrontPanelModel>(
+          builder: (context, _, model) => Backdrop(
+            appBarAnimatedLeadingMenuIcon: AnimatedIcons.close_menu,
+            appBarTitle: Text('Navigation'),
+            backLayer: BackPanel(),
+            toggleFrontLayer: _toggleFrontLayer,
+            frontLayer: model.activePanel,
+            // frontHeader: model.panelTitle(context),
+            frontHeaderHeight: 10.0,
+            titleVisibleOnPanelClosed: true,
+            shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            )),
+          ),
         ),
       ),
     );
@@ -88,7 +126,7 @@ class FrontPanelModel extends Model {
           : _activePanel == FrontPanels.routinePanel
               ? CheckRoutineAuth()
               : _activePanel == FrontPanels.profilePanel
-                  ? LoginHome()
+                  ? CheckAuth()
                   : _activePanel == FrontPanels.settingsPanel
                       ? SettingsPage()
                       : PanelFour();

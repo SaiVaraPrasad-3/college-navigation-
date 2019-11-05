@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:islington_navigation_flutter/view/credentials/login_page.dart';
+import 'package:islington_navigation_flutter/view/credentials/login_home.dart';
 import 'package:islington_navigation_flutter/view/profile/profile_after_login.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -43,7 +43,7 @@ class _NotLoggedInState extends State<NotLoggedIn> {
               child: Text("Sign in"),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-                  return LoginPage();
+                  return LoginHome();
                 }));
                 // Navigator.of(context).pushReplacementNamed('/login');
               }),

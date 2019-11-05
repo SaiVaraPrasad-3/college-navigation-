@@ -54,7 +54,6 @@ class _LoginHomeState extends State<LoginHome> {
         userDetails.photoUrl,
         userDetails.email,
         providerData);
-
     try {
       Users user = new Users(email: userDetails.email);
       try {

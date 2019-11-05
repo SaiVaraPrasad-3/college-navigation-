@@ -52,7 +52,9 @@ class NavigationApp extends StatelessWidget {
             theme: theme,
             home: intro ? OnBoardingScreen() : BackDropPage(),
             routes: <String, WidgetBuilder>{
-              '/mainpage': (BuildContext context) => MainPage(),
+              '/backdrop': (BuildContext context) => BackDropPage(),
+              // '/mainpage': (BuildContext context) => MainPage(),
+              '/mainpage': (BuildContext context) => BackDropPage(),
               '/overview': (BuildContext context) => OverviewHome(),
               '/routine': (BuildContext context) => RoutineList(),
               '/checkAuth': (BuildContext context) => CheckAuth(),
@@ -235,14 +237,3 @@ class _MainPageState extends State<MainPage> {
     _navigationController.dispose();
   }
 }
-
-//  private String getUrl(double latitude, double longitude, String college, int radius){
-//         StringBuilder googleURL = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-//         googleURL.append("location=" + latitude + "," + longitude);
-//         googleURL.append("&radius=" + radius);
-//         googleURL.append("&type=" + "college");
-//         googleURL.append("&keyword=" + "college");
-//         googleURL.append("&sensor=true");
-//         googleURL.append("&key=" + "AIzaSyDrZcyo4Ql5W8VbVsJgMguqepXsxaDQCC8" );
-
-//        Log.e

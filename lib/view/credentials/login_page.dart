@@ -88,7 +88,7 @@ class LoginPageState extends State<LoginPage> {
 
               print("user id is: " + users.first.user_id);
               _storeUserId(users.first.user_id);
-              Navigator.of(context).pushReplacementNamed('/mainpage');
+              Navigator.of(context).pushReplacementNamed('/backdrop');
             } else {
               print("User failed to login");
               showInSnackBar("Please try again later");

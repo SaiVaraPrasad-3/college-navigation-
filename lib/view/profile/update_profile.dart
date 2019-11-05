@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:islington_navigation_flutter/controller/utils/backdrop.dart';
 import 'package:islington_navigation_flutter/model/app/users.dart';
 import 'package:islington_navigation_flutter/view/credentials/login_page.dart';
 import 'package:random_string/random_string.dart';
@@ -101,8 +102,8 @@ class UpdateProfilePageState extends State<UpdateProfilePage> {
           if (returnCode == "200") {
             print("User updated succcessfully");
             showInSnackBar("User updated succcessfully");
-
-            Navigator.of(context).pushReplacementNamed('/mainpage');
+            // Navigator.popAndPushNamed(context, '/checkauth');
+            Navigator.of(context).pushReplacementNamed('/checkAuth');
           } else if (returnCode == "500") {
             print("User failed to register");
             showInSnackBar("Please try again later");
@@ -110,10 +111,12 @@ class UpdateProfilePageState extends State<UpdateProfilePage> {
         }).catchError((onError) {
           print("Could not create data because: " + onError.toString());
         }).whenComplete(() {
-          print("User updated succcessfully");
+          print("User updated succcessfully 2");
           showInSnackBar("User updated succcessfully");
-
-          Navigator.of(context).pushReplacementNamed('/mainpage');
+          Navigator.of(context).pushReplacement(new MaterialPageRoute(
+              settings: const RouteSettings(name: '/backdrop'),
+              builder: (context) => new BackDropPage(pageName: 'profile')));
+          // Navigator.of(context).pushReplacementNamed('/checkAuth');
         });
       } on PlatformException {
         print("Try again later");

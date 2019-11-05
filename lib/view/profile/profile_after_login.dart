@@ -57,7 +57,6 @@ class _ProfileLoggedInState extends State<ProfileLoggedIn> {
     });
 
     Future.delayed(Duration(seconds: 2));
-    // print("inside refresher : ");
   }
 
   Future getImage() async {
@@ -77,13 +76,9 @@ class _ProfileLoggedInState extends State<ProfileLoggedIn> {
       }
     }).catchError((onError) {
       print("Could not edit data because: " + onError.toString());
-      // Navigator.of(context).pop();
-      // Navigator.pop(context);
+
     });
 
-    // uploadPhoto(_image, widget.user.user_id).then((returnCode) {
-    //   if
-    // });
   }
 
   void _upload() {
@@ -104,10 +99,6 @@ class _ProfileLoggedInState extends State<ProfileLoggedIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-        centerTitle: true,
-      ),
       body: EasyRefresh(
         refreshHeader: BezierCircleHeader(
           key: _headerKey,
